@@ -6,7 +6,7 @@
 #    By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/29 11:56:35 by ledelbec          #+#    #+#              #
-#    Updated: 2024/02/29 16:42:43 by ledelbec         ###   ########.fr        #
+#    Updated: 2024/03/05 11:23:19 by ledelbec         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ SOURCES=\
 
 NAME=philo
 CC=clang
-CFLAGS=-Wall -Wextra -MMD -g3 # -Werror
+CFLAGS=-MMD -g3 -Wall -Wextra # -Werror
 
 OBJECTS=$(SOURCES:.c=.o)
 DEPS=$(OBJECTS:.o=.d)

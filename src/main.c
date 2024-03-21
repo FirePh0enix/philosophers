@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 12:02:57 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/02/29 16:52:38 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/03/21 15:04:18 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,27 +19,26 @@
 #include <stdbool.h>
 #include <string.h>
 
-typedef struct s_fork
-{
-	pthread_mutex_t	mutex;
-}	t_fork;
-
 typedef struct s_philo
 {
-	pthread_mutex_t	mutex;
 	int				num;
+	pthread_mutex_t	mutex;
 	pthread_t		thread;
-	t_fork			*left_fork;
-	t_fork			*right_fork;
-	bool			is_dead;
-	bool			is_alone;
+	pthread_mutex_t	*left_fork;
+	pthread_mutex_t	*right_fork;
+
+	suseconds_t		last_meal;
 
 	suseconds_t		time_to_eat;
 	suseconds_t		time_to_sleep;
-	suseconds_t		last_meal;
+
+	bool			alive;
+	pthread_mutex_t	*global;
 }	t_philo;
 
-suseconds_t	getms()
+void	do_something(t_philo *philo);
+
+suseconds_t	whats_the_time()
 {
 	struct timeval	tv;
 
@@ -47,35 +46,12 @@ suseconds_t	getms()
 	return ((tv.tv_sec * 1000000 + tv.tv_usec) / 1000);
 }
 
-void	do_something(t_philo *philo)
+pthread_mutex_t	*give_me_a_new_fork()
 {
-	while (!philo->is_dead)
-	{
-		if (!philo->is_alone)
-		{
-			pthread_mutex_lock(&philo->left_fork->mutex);
-			printf("%ld %d has taken a fork\n", getms(), philo->num);
-		}
-		pthread_mutex_lock(&philo->right_fork->mutex);
-		printf("%ld %d has taken a fork\n", getms(), philo->num);
-		printf("%ld %d is eating\n", getms(), philo->num);
-		usleep(philo->time_to_eat);
-		philo->last_meal = getms();
-		if (!philo->is_alone)
-			pthread_mutex_unlock(&philo->left_fork->mutex);
-		pthread_mutex_unlock(&philo->right_fork->mutex);
-		printf("%ld %d is sleeping\n", getms(), philo->num);
-		usleep(philo->time_to_sleep);
-		printf("%ld %d is thinking\n", getms(), philo->num);
-	}
-}
+	pthread_mutex_t	*fork;
 
-t_fork	*create_fork()
-{
-	t_fork	*fork;
-
-	fork = malloc(sizeof(t_fork));
-	pthread_mutex_init(&fork->mutex, NULL);
+	fork = malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(fork, NULL);
 	return (fork);
 }
 
@@ -85,34 +61,68 @@ void	init_forks(t_philo *philos, int count)
 
 	if (count == 1)
 	{
-		philos[0].right_fork = create_fork();
-		philos[0].is_alone = true;
+		philos[0].right_fork = give_me_a_new_fork();
 		return ;
 	}
-	philos[0].right_fork = create_fork();
+	philos[0].right_fork = give_me_a_new_fork();
 	i = 1;
-	while (i < count - 1)
+	while (i < count)
 	{
-		philos[i].right_fork = create_fork();
+		philos[i].right_fork = give_me_a_new_fork();
 		philos[i].left_fork = philos[i - 1].right_fork;
 		i++;
 	}
-	philos[count - 1].right_fork = create_fork();
-	philos[count - 1].left_fork = philos[count - 2].right_fork;
 	philos[0].left_fork = philos[count - 1].right_fork;
+}
+
+void	lets_the_simulation_begin(t_philo *philos, int count)
+{
+	int	i;
+
+	i = -1;
+	while (++i < count)
+	{
+		pthread_create(&philos[i].thread, NULL, (void *)do_something, philos + i);
+	}
+}
+
+void	do_something(t_philo *philo)
+{
+	while (1)
+	{
+		/*
+		 * The philo is trying to take its forks.
+		 */
+		pthread_mutex_lock(&philo->mutex);
+			pthread_mutex_lock(philo->right_fork);
+			pthread_mutex_lock(philo->left_fork);
+		pthread_mutex_unlock(&philo->mutex);
+
+		/*
+		 * The philo is eating.
+		 */
+		if (!philo->alive)
+			break ;
+
+		pthread_mutex_lock(&philo->mutex);
+			printf("%lu %d is eating\n", whats_the_time(), philo->num);
+			usleep(philo->time_to_eat);
+			philo->last_meal = whats_the_time();
+		pthread_mutex_unlock(&philo->mutex);
+	}
 }
 
 bool	is_someone_dead(t_philo *philos, int count, int time_to_die)
 {
 	int	i;
 
-	i = 0;
-	while (i < count)
+	i = -1;
+	while (++i < count)
 	{
 		pthread_mutex_lock(&philos[i].mutex);
-		if (getms() - philos[i].last_meal >= time_to_die)
+		if (whats_the_time() - philos[i].last_meal > time_to_die)
 		{
-			philos[i].is_dead = true;
+			pthread_mutex_unlock(&philos[i].mutex);
 			return (true);
 		}
 		pthread_mutex_unlock(&philos[i].mutex);
@@ -122,38 +132,30 @@ bool	is_someone_dead(t_philo *philos, int count, int time_to_die)
 
 int	main(int argc, char *argv[])
 {
-	int			philo_count;
-	int			time_to_die;
-	int			time_to_eat;
-	int			time_to_sleep;
-	t_philo		*philos;
-	int			i;
+	int	num	= atoi(argv[1]);
+	int	time_to_die = atoi(argv[2]);
+	int	time_to_eat = atoi(argv[3]);
+	int	time_to_sleep = atoi(argv[4]);
 
-	philo_count = atoi(argv[1]);
-	time_to_die = atoi(argv[2]);
-	time_to_eat = atoi(argv[3]);
-	time_to_sleep = atoi(argv[3]);
-	philos = malloc(sizeof(t_philo) * philo_count);
-	memset(philos, 0, sizeof(t_philo) * philo_count);
-	i = 0;
-	while (i < philo_count)
+	t_philo *philos = malloc(sizeof(t_philo) * num);
+	memset(philos, 0, sizeof(t_philo) * num);
+
+	pthread_mutex_t	*mutex = give_me_a_new_fork();
+
+	for (int i = 0; i < num; i++)
 	{
 		philos[i].num = i + 1;
-		philos[i].last_meal = getms();
+		philos[i].last_meal = whats_the_time();
+		philos[i].alive = true;
+		philos[i].global = mutex;
 		philos[i].time_to_eat = time_to_eat;
 		philos[i].time_to_sleep = time_to_sleep;
 		pthread_mutex_init(&philos[i].mutex, NULL);
-		i++;
 	}
-	init_forks(philos, philo_count);
-	i = 0;
-	while (i < philo_count)
-	{
-		pthread_create(&philos[i].thread, NULL, (void *) do_something, &philos[i]);
-		i++;
-	}
-	while (!is_someone_dead(philos, philo_count, time_to_die))
-	{
-	}
-	printf("%ld %d died\n", getms(), philos[0].num); // TODO
+
+	init_forks(philos, num);
+	lets_the_simulation_begin(philos, num);
+
+	while (!is_someone_dead(philos, num, time_to_die))
+		;
 }
