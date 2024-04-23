@@ -6,12 +6,14 @@
 #    By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/21 13:34:10 by ledelbec          #+#    #+#              #
-#    Updated: 2024/04/21 15:48:20 by ledelbec         ###   ########.fr        #
+#    Updated: 2024/04/23 12:37:25 by ledelbec         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SOURCES=\
-	src/main.c
+	src/main.c \
+	src/utils.c \
+	src/forks.c
 
 CC=clang
 CFLAGS=-Wall -Wextra -pthread -g
@@ -27,3 +29,5 @@ clean:
 
 fclean: clean
 	rm -f $(NAME)
+
+re: fclean $(NAME)
