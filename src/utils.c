@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 12:01:36 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/04/23 13:00:39 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/04/23 14:11:19 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,11 @@ void	advanced_sleep(int time)
 	while ((ms() - start) < time)
 		usleep(500);
 }
+
+/*void	advanced_sleep(int time)
+{
+	usleep(time * 1000);
+}*/
 
 void	free_all(t_global *global)
 {

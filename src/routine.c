@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 12:51:08 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/04/23 12:52:04 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/04/23 14:11:02 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	do_eat(t_philo *philo)
 	philo->last_meal = ms();
 	philo->meal_count++;
 	pthread_mutex_unlock(&philo->mutex);
-	advanced_sleep(philo->global->time_to_sleep);
+	advanced_sleep(philo->global->time_to_eat);
 	pthread_mutex_unlock(philo->right_fork);
 	pthread_mutex_unlock(philo->left_fork);
 }

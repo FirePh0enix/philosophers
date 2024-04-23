@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 13:36:05 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/04/23 13:02:18 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/04/23 14:11:51 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,12 +116,14 @@ int	main(int argc, char *argv[])
 		return (1);
 	if (!parse_args(argc, argv, global))
 		return (free(global), 0);
+	printf("%d %d %d\n", global->time_to_die, global->time_to_eat, global->time_to_sleep);
 	global->philos = malloc(sizeof(t_philo) * global->num);
 	if (!global->philos)
 		return (free(global), 1);
 	pthread_mutex_init(&global->print_mutex, NULL);
 	init_philos(global);
 	global->start_ms = ms();
+	create_threads(global);
 	while (1)
 	{
 		if (check_end(global))
