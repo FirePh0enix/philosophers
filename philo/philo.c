@@ -6,13 +6,13 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 12:56:26 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/04/23 12:57:48 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/04/24 12:31:54 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	create_threads(t_global *global)
+bool	create_threads(t_global *global)
 {
 	int	i;
 
@@ -23,25 +23,34 @@ void	create_threads(t_global *global)
 			&global->philos[i]);
 		i++;
 	}
+	return (true);
 }
 
-void	join_threads(t_global *global)
+bool	join_threads(t_global *global)
 {
 	int	i;
 
 	i = 0;
 	while (i < global->num)
 	{
-		pthread_join(global->philos[i].thread, NULL);
+		if (!global->philos[i].thread)
+		{
+			i++;
+			continue ;
+		}
+		if (pthread_join(global->philos[i].thread, NULL) != 0)
+			return (false);
 		i++;
 	}
+	return (true);
 }
 
-void	init_philos(t_global *global)
+bool	init_philos(t_global *global)
 {
 	int	i;
 
-	init_forks(global);
+	if (!init_forks(global))
+		return (false);
 	i = 0;
 	while (i < global->num)
 	{
@@ -52,4 +61,5 @@ void	init_philos(t_global *global)
 		pthread_mutex_init(&global->philos[i].mutex, NULL);
 		i++;
 	}
+	return (true);
 }

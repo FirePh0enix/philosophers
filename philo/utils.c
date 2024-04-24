@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 12:01:36 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/04/23 14:11:19 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/04/24 12:24:52 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <limits.h>
 #include <unistd.h>
 #include <sys/time.h>
+#include <stdio.h>
 #include "philo.h"
 
 bool	ft_atol_err(char *s, long *l)
@@ -62,11 +63,6 @@ void	advanced_sleep(int time)
 		usleep(500);
 }
 
-/*void	advanced_sleep(int time)
-{
-	usleep(time * 1000);
-}*/
-
 void	free_all(t_global *global)
 {
 	int	i;
@@ -74,9 +70,17 @@ void	free_all(t_global *global)
 	i = 0;
 	while (i < global->num)
 	{
-		free(global->philos[i].right_fork);
+		if (global->philos[i].right_fork)
+			free(global->philos[i].right_fork);
 		i++;
 	}
 	free(global->philos);
 	free(global);
+}
+
+void	print_msg(t_philo *philo, suseconds_t time, char *s)
+{
+	pthread_mutex_lock(&philo->global->print_mutex);
+	printf("%lu %d %s\n", time - philo->global->start_ms, philo->num, s);
+	pthread_mutex_unlock(&philo->global->print_mutex);
 }

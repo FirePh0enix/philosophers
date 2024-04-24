@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 12:32:05 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/04/23 12:49:34 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/04/24 12:05:25 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,13 @@ pthread_mutex_t	*alloc_fork(void)
 	pthread_mutex_t	*fork;
 
 	fork = malloc(sizeof(pthread_mutex_t));
+	if (!fork)
+		return (NULL);
 	pthread_mutex_init(fork, NULL);
 	return (fork);
 }
 
-void	init_forks(t_global *global)
+bool	init_forks(t_global *global)
 {
 	t_philo	*philos;
 	int		i;
@@ -34,17 +36,22 @@ void	init_forks(t_global *global)
 	if (global->num == 1)
 	{
 		philos[0].right_fork = alloc_fork();
-		return ;
+		if (!philos[0].right_fork)
+			return (false);
+		return (false);
 	}
 	philos[0].right_fork = alloc_fork();
 	i = 1;
 	while (i < global->num)
 	{
 		philos[i].right_fork = alloc_fork();
+		if (!philos[i].right_fork)
+			return (false);
 		philos[i].left_fork = philos[i - 1].right_fork;
 		i++;
 	}
 	philos[0].left_fork = philos[global->num - 1].right_fork;
+	return (true);
 }
 
 static int	lock_both(t_philo *philo, pthread_mutex_t *first,

@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 12:51:08 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/04/23 14:11:02 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/04/24 12:18:06 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ void	*routine(t_philo *philo)
 {
 	if (philo->global->num == 1)
 		advanced_sleep(philo->global->time_to_die);
+	else if (!philo->left_fork)
+		return (NULL);
 	while (1)
 	{
 		if (is_someone_dead(philo->global))

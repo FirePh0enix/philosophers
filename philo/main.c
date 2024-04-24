@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 13:36:05 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/04/23 14:13:29 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/04/24 12:19:11 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-
-void	print_msg(t_philo *philo, suseconds_t time, char *s)
-{
-	pthread_mutex_lock(&philo->global->print_mutex);
-	printf("%lu %d %s\n", time - philo->global->start_ms, philo->num, s);
-	pthread_mutex_unlock(&philo->global->print_mutex);
-}
 
 bool	check_if_someone_dead(t_global *global)
 {
@@ -105,24 +98,17 @@ bool	parse_args(int argc, char *argv[], t_global *global)
 	return (true);
 }
 
-int	main(int argc, char *argv[])
+static bool	init_and_loop(t_global *global)
 {
-	t_global	*global;
-
-	global = malloc(sizeof(t_global));
-	memset(global, 0, sizeof(t_global));
-	global->max_meals = -1;
-	if (!global)
-		return (1);
-	if (!parse_args(argc, argv, global))
-		return (free(global), 0);
-	global->philos = malloc(sizeof(t_philo) * global->num);
-	if (!global->philos)
-		return (free(global), 1);
+	if (!init_philos(global))
+		return (false);
 	pthread_mutex_init(&global->print_mutex, NULL);
-	init_philos(global);
 	global->start_ms = ms();
-	create_threads(global);
+	if (!create_threads(global))
+	{
+		join_threads(global);
+		return (false);
+	}
 	while (1)
 	{
 		if (check_end(global))
@@ -132,4 +118,26 @@ int	main(int argc, char *argv[])
 	}
 	join_threads(global);
 	free_all(global);
+	return (true);
+}
+
+int	main(int argc, char *argv[])
+{
+	t_global	*global;
+
+	global = malloc(sizeof(t_global));
+	if (!global)
+		return (1);
+	memset(global, 0, sizeof(t_global));
+	global->max_meals = -1;
+	if (!global)
+		return (1);
+	if (!parse_args(argc, argv, global))
+		return (free(global), 0);
+	global->philos = malloc(sizeof(t_philo) * global->num);
+	if (!global->philos)
+		return (free(global), 1);
+	memset(global->philos, 0, sizeof(t_philo) * global->num);
+	if (!init_and_loop(global))
+		return (free_all(global), 1);
 }

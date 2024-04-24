@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 13:43:08 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/04/23 13:00:54 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/04/24 12:08:51 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,17 +55,17 @@ suseconds_t	ms(void);
 void		advanced_sleep(int time);
 
 int			lock_forks(t_philo *philo);
-void		init_forks(t_global *global);
+bool		init_forks(t_global *global);
 
 void		print_msg(t_philo *philo, suseconds_t time, char *s);
 
-void		init_philos(t_global *global);
+bool		init_philos(t_global *global);
 void		*routine(t_philo *philo);
 
 bool		ft_atol_err(char *s, long *l);
 void		free_all(t_global *global);
 
-void		create_threads(t_global *global);
-void		join_threads(t_global *global);
+bool		create_threads(t_global *global);
+bool		join_threads(t_global *global);
 
 #endif
