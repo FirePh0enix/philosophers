@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 12:51:08 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/04/24 12:18:06 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/04/25 13:37:41 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,18 @@ void	do_eat(t_philo *philo)
 	pthread_mutex_unlock(philo->left_fork);
 }
 
+#include <stdio.h>
+
 void	*routine(t_philo *philo)
 {
 	if (philo->global->num == 1)
+	{
+		pthread_mutex_lock(philo->right_fork);
+		print_msg(philo, ms(), "has taken a fork");
+		pthread_mutex_unlock(philo->right_fork);
 		advanced_sleep(philo->global->time_to_die);
+		return (NULL);
+	}
 	else if (!philo->left_fork)
 		return (NULL);
 	while (1)

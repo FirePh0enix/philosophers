@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 12:32:05 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/04/24 12:05:25 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/04/25 13:37:09 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ bool	init_forks(t_global *global)
 		philos[0].right_fork = alloc_fork();
 		if (!philos[0].right_fork)
 			return (false);
-		return (false);
+		return (true);
 	}
 	philos[0].right_fork = alloc_fork();
 	i = 1;

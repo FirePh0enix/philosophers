@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 13:36:05 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/04/24 12:19:11 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/04/25 13:35:33 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@ bool	parse_args(int argc, char *argv[], t_global *global)
 			return (false);
 	}
 	else
+		return (false);
+	if (global->num < 1)
 		return (false);
 	return (true);
 }
