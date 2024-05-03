@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 12:01:36 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/04/25 13:27:41 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/05/03 11:28:05 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,7 @@ bool	ft_atol_err(char *s, long *l)
 
 	sign = 1;
 	if (*s == '-')
-	{
-		sign = -1;
-		s++;
-		return (false);
-	}
+		return (sign = -1, s++, false);
 	else if (*s == '+')
 		s++;
 	res = 0;

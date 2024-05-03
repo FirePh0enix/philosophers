@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 12:51:08 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/04/25 13:37:41 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/05/03 11:28:20 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,6 @@ void	do_eat(t_philo *philo)
 	pthread_mutex_unlock(philo->right_fork);
 	pthread_mutex_unlock(philo->left_fork);
 }
-
-#include <stdio.h>
 
 void	*routine(t_philo *philo)
 {
