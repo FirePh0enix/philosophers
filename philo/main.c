@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 13:36:05 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/04/25 13:35:33 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/05/03 11:26:22 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,6 @@ bool	check_end(t_global *global)
 		i++;
 	}
 	pthread_mutex_lock(&global->print_mutex);
-	printf("%lu everyone ate at least %d times\n", ms() - global->start_ms,
-		(int) global->max_meals);
 	global->someone_dead = true;
 	pthread_mutex_unlock(&global->print_mutex);
 	return (true);
