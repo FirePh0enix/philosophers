@@ -6,10 +6,11 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 12:01:36 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/05/03 11:28:05 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/05/08 11:06:37 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <pthread.h>
 #include <stdbool.h>
 #include <limits.h>
 #include <unistd.h>
@@ -64,6 +65,13 @@ void	free_all(t_global *global)
 {
 	int	i;
 
+	i = 0;
+	while (i < global->num)
+	{
+		if (global->philos[i].right_fork)
+			pthread_join(global->philos[i].thread, NULL);
+		i++;
+	}
 	i = 0;
 	while (i < global->num)
 	{

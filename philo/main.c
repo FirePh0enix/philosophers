@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 13:36:05 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/05/03 11:26:22 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/05/08 11:04:17 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,6 @@ static bool	init_and_loop(t_global *global)
 		if (check_if_someone_dead(global))
 			break ;
 	}
-	join_threads(global);
 	free_all(global);
 	return (true);
 }
