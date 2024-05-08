@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 12:01:36 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/05/08 11:06:37 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/05/08 11:48:43 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	free_all(t_global *global)
 	i = 0;
 	while (i < global->num)
 	{
-		if (global->philos[i].right_fork)
+		if (global->philos[i].thread)
 			pthread_join(global->philos[i].thread, NULL);
 		i++;
 	}

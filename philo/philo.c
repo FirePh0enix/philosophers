@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 12:56:26 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/04/25 13:36:55 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/05/08 11:55:04 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,16 @@ bool	create_threads(t_global *global)
 	i = 0;
 	while (i < global->num)
 	{
-		pthread_create(&global->philos[i].thread, NULL, (void *) routine,
-			&global->philos[i]);
+		if (pthread_create(&global->philos[i].thread, NULL, (void *) routine,
+			&global->philos[i]) != 0)
+		{
+			pthread_mutex_lock(&global->philos[i].mutex);
+			pthread_mutex_lock(&global->print_mutex);
+			global->someone_dead = true;
+			pthread_mutex_unlock(&global->philos[i].mutex);
+			pthread_mutex_unlock(&global->print_mutex);
+			return (false);
+		}
 		i++;
 	}
 	return (true);

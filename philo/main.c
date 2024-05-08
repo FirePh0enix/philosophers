@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 13:36:05 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/05/08 11:04:17 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/05/08 11:55:06 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,13 @@ bool	check_if_someone_dead(t_global *global)
 	int		i;
 	t_philo	*philo;
 
+	pthread_mutex_lock(&global->print_mutex);
+	if (global->someone_dead)
+	{
+		pthread_mutex_unlock(&global->print_mutex);
+		return (true);
+	}
+	pthread_mutex_unlock(&global->print_mutex);
 	i = 0;
 	while (i < global->num)
 	{
@@ -104,11 +111,9 @@ static bool	init_and_loop(t_global *global)
 		return (false);
 	pthread_mutex_init(&global->print_mutex, NULL);
 	global->start_ms = ms();
-	if (!create_threads(global))
-	{
-		join_threads(global);
-		return (false);
-	}
+	// if (!create_threads(global))
+	// 	return (false);
+	create_threads(global);
 	while (1)
 	{
 		if (check_end(global))
