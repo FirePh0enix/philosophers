@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 12:56:26 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/05/08 11:55:04 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/05/08 11:59:28 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,25 +29,6 @@ bool	create_threads(t_global *global)
 			pthread_mutex_unlock(&global->print_mutex);
 			return (false);
 		}
-		i++;
-	}
-	return (true);
-}
-
-bool	join_threads(t_global *global)
-{
-	int	i;
-
-	i = 0;
-	while (i < global->num)
-	{
-		if (!global->philos[i].thread)
-		{
-			i++;
-			continue ;
-		}
-		if (pthread_join(global->philos[i].thread, NULL) != 0)
-			return (false);
 		i++;
 	}
 	return (true);

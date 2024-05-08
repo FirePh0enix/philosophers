@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 13:36:05 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/05/08 11:55:06 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/05/08 11:58:31 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,9 +111,8 @@ static bool	init_and_loop(t_global *global)
 		return (false);
 	pthread_mutex_init(&global->print_mutex, NULL);
 	global->start_ms = ms();
-	// if (!create_threads(global))
-	// 	return (false);
-	create_threads(global);
+	if (!create_threads(global))
+		return (false);
 	while (1)
 	{
 		if (check_end(global))

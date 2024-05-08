@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 13:43:08 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/04/24 12:08:51 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/05/08 11:59:26 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,5 @@ bool		ft_atol_err(char *s, long *l);
 void		free_all(t_global *global);
 
 bool		create_threads(t_global *global);
-bool		join_threads(t_global *global);
 
 #endif

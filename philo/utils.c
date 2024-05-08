@@ -6,7 +6,7 @@
 /*   By: ledelbec <ledelbec@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 12:01:36 by ledelbec          #+#    #+#             */
-/*   Updated: 2024/05/08 11:48:43 by ledelbec         ###   ########.fr       */
+/*   Updated: 2024/05/08 12:02:28 by ledelbec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,14 @@ void	free_all(t_global *global)
 	free(global);
 }
 
+bool	is_someone_dead(t_global *global);
+
 void	print_msg(t_philo *philo, suseconds_t time, char *s)
 {
+	if (is_someone_dead(philo->global))
+	{
+		return ;
+	}
 	pthread_mutex_lock(&philo->global->print_mutex);
 	printf("%lu %d %s\n", time - philo->global->start_ms, philo->num, s);
 	pthread_mutex_unlock(&philo->global->print_mutex);
